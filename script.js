@@ -1,25 +1,17 @@
 require('dotenv').config();
-const client = require("./client.js");
-const { ActivityType } = require('discord.js');
+
 const axios = require('axios');
+const client = require("./discord/client.js");
+const formatFDV = require("./utils/format.js");
+const { ActivityType } = require('discord.js');
 
 const { DISCORD_BOT_TOKEN, TOKEN_CONTRACT_ADDRESS } = process.env;
-const DEXSCREENER_API_URL = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT_ADDRESS}`;
-
-const formatFDV = fdv => {
-    if (fdv >= 1000000) {
-        return `${(fdv / 1000000).toFixed(1)}M`;
-    } else if (fdv >= 1000) {
-        return `${(fdv / 1000).toFixed(0)}K`;
-    } else {
-        return fdv.toFixed(2);
-    }
-};
+const api_url = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT_ADDRESS}`;
 
 client.once('ready', () => {
     console.log('client is ready!');
     updateBotStatus().then(() => console.log('bot updated'));
-    setInterval(updateBotStatus, 30000);
+    setInterval(updateBotStatus, 60000);
 });
 
 async function fetchData() {
@@ -30,7 +22,7 @@ async function fetchData() {
 
     try {
         console.log('refreshing price...');
-        const response = await axios.get(DEXSCREENER_API_URL);
+        const response = await axios.get(api_url);
         return response.data['pairs'];
     } catch(error) {
         console.error('error fetching data: ', error);

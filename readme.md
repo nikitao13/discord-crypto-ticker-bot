@@ -2,7 +2,7 @@
 
 A simple bot that displays the price and FDV (Fully Diluted Valuation) of a cryptocurrency on Discord via Activity Status and Nickname.  Data is fetched from DEXSCREENER and only tokens that are there will work. You can also find the contract address there.
 
-## Setup - Make sure Node.Js is installed
+## Setup - Make sure Node.Js & Git are installed
 *create a new text document then file save as, set save as type to 'all files' and file name to .env
 
 1. Create a `.env`* file in the root directory with the following content:
