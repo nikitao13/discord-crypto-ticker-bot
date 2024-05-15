@@ -25,7 +25,7 @@ A simple bot that displays the price and FDV (Fully Diluted Valuation) of a cryp
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/nikitao13/discord-ticker-bot.git
+    git clone https://github.com/nikitao13/discord-crypto-ticker-bot.git
     ```
 
 2. Navigate to the project directory:
