@@ -31,7 +31,7 @@ A simple bot that displays the price and FDV (Fully Diluted Valuation) of a cryp
 2. Navigate to the project directory:
 
     ```bash
-    cd discord-ticker-bot
+    cd discord-crypto-ticker-bot
     ```
 
 3. Install dependencies:
