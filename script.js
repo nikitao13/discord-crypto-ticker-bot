@@ -6,7 +6,15 @@ const axios = require('axios');
 const { DISCORD_BOT_TOKEN, TOKEN_CONTRACT_ADDRESS } = process.env;
 const DEXSCREENER_API_URL = `https://api.dexscreener.com/latest/dex/tokens/${TOKEN_CONTRACT_ADDRESS}`;
 
-const formatFDV = fdv => `${(fdv / 1000000).toFixed(2)}M`;
+const formatFDV = fdv => {
+    if (fdv >= 1000000) {
+        return `${(fdv / 1000000).toFixed(2)}M`;
+    } else if (fdv >= 1000) {
+        return `${(fdv / 1000).toFixed(0)}K`;
+    } else {
+        return fdv.toFixed(2);
+    }
+};
 
 client.once('ready', () => {
     console.log('client is ready!');
@@ -44,7 +52,7 @@ async function setNickname(fdv, symbol) {
     try {
         const guild = client.guilds.cache.get("1216704396440637440");
         const botMember = guild.members.me;
-        await botMember.setNickname(`$${symbol} ${formatFDV(fdv)}`);
+        await botMember.setNickname(`$${symbol.toUpperCase()} ${formatFDV(fdv)}`);
     } catch(error) {
         console.error('error setting fdv: ', error)
     }
