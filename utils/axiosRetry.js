@@ -1,17 +1,14 @@
 const axios = require('axios').default;
 const axiosRetry = require('axios-retry').default;
 
-let retryCount = 0;
-
 const axiosInstance = axios.create({ timeout: 5000 });
 
 function configureAxiosRetry() {
     axiosRetry(axiosInstance, {
         retries: 20,
         retryDelay: retryAttempt => {
-            retryCount++;
             const delay = axiosRetry.exponentialDelay(retryAttempt);
-            console.log(`Retry attempt: ${retryAttempt + 1}, retrying in ${(delay / 1000).toFixed(2)} seconds`);
+            console.log(`Retry attempt: ${retryAttempt}\nRetrying in ${(delay / 1000).toFixed(2)}s`);
             return delay;
         },
         retryCondition: error =>
@@ -23,6 +20,5 @@ function configureAxiosRetry() {
 module.exports = {
     axiosInstance,
     configureAxiosRetry,
-    getRetryCount: () => retryCount,
     resetRetryCount: () => { retryCount = 0; }
 };

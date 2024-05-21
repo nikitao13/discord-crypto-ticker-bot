@@ -4,7 +4,7 @@ const client = require("./discord/client.js");
 const axiosRetry = require('axios-retry').default;
 const formatFDV = require("./utils/format.js");
 
-const { axiosInstance, configureAxiosRetry, getRetryCount, resetRetryCount } = require('./utils/axiosRetry');
+const { axiosInstance, configureAxiosRetry, resetRetryCount } = require('./utils/axiosRetry');
 const { ActivityType } = require('discord.js');
 
 const { DISCORD_BOT_TOKEN, TOKEN_CONTRACT_ADDRESS } = process.env;
@@ -19,6 +19,12 @@ client.once('ready', () => {
     console.log('Client is ready!');
     startBot();
 });
+
+function startBot() {
+    if (updateInterval) clearInterval(updateInterval);
+    updateInterval = setInterval(updateBotStatus, 60000);
+    updateBotStatus().then(() => console.log('Bot started successfully!'));
+}
 
 async function fetchData() {
     if (isFetching) return [];
@@ -70,12 +76,6 @@ async function updateBotStatus() {
     const { fdv, priceUsd, baseToken: { symbol } } = pairs[0];
     await setActivity(priceUsd);
     await setNickname(fdv, symbol);
-}
-
-function startBot() {
-    if (updateInterval) clearInterval(updateInterval);
-    updateInterval = setInterval(updateBotStatus, 60000);
-    updateBotStatus().then(() => console.log('Bot started successfully!'));
 }
 
 client.login(DISCORD_BOT_TOKEN)
