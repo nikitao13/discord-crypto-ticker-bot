@@ -1,25 +1,27 @@
-const axios = require('axios');
+const axios = require('axios').default;
 const axiosRetry = require('axios-retry').default;
 
 let retryCount = 0;
 
+const axiosInstance = axios.create({ timeout: 5000 });
+
 function configureAxiosRetry() {
-    axiosRetry(axios, {
-        retries: 50,
-        retryDelay: (retryAttempt) => {
+    axiosRetry(axiosInstance, {
+        retries: 20,
+        retryDelay: retryAttempt => {
             retryCount++;
             const delay = axiosRetry.exponentialDelay(retryAttempt);
-            const delaySeconds = delay / 1000;
-            console.log(`retry attempt: ${retryAttempt + 1}, retrying in ${delaySeconds.toFixed(2)} seconds`);
+            console.log(`Retry attempt: ${retryAttempt + 1}, retrying in ${(delay / 1000).toFixed(2)} seconds`);
             return delay;
         },
-        retryCondition: (error) => {
-            return axiosRetry.isNetworkOrIdempotentRequestError(error) || (error.response && error.response.status >= 500);
-        },
+        retryCondition: error =>
+            axiosRetry.isNetworkOrIdempotentRequestError(error) || (error.response && error.response.status >= 500),
+        shouldResetTimeout: true
     });
 }
 
 module.exports = {
+    axiosInstance,
     configureAxiosRetry,
     getRetryCount: () => retryCount,
     resetRetryCount: () => { retryCount = 0; }
