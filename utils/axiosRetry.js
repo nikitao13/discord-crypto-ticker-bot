@@ -8,7 +8,7 @@ function configureAxiosRetry() {
         retries: 20,
         retryDelay: retryAttempt => {
             const delay = axiosRetry.exponentialDelay(retryAttempt);
-            console.log(`Retry attempt: ${retryAttempt}\nRetrying in ${(delay / 1000).toFixed(2)}s`);
+            console.log(`Retry attempt: ${retryAttempt}\nRetrying in ${(delay / 1000).toFixed(2)}s\n`);
             return delay;
         },
         retryCondition: error =>

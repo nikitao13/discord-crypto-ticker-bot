@@ -16,14 +16,15 @@ let isFetching = false;
 configureAxiosRetry();
 
 client.once('ready', () => {
-    console.log('Client is ready!');
+    console.log('Client is ready!\n');
     startBot();
 });
 
 function startBot() {
     if (updateInterval) clearInterval(updateInterval);
     updateInterval = setInterval(updateBotStatus, 60000);
-    updateBotStatus().then(() => console.log('Bot started successfully!'));
+    updateBotStatus().then(() => 
+        console.log('Bot started successfully!\n--------------------------'));
 }
 
 async function fetchData() {
@@ -51,7 +52,8 @@ async function fetchData() {
 async function setActivity(priceUsd) {
     if (!client.user) return console.error('client.user is not defined');
     try {
-        console.log('USD:', priceUsd);
+        const priceFormatted = `$${Number(priceUsd).toFixed(3)}\n`;
+        console.log('USD:', priceFormatted);
         await client.user.setActivity(`USD: $${priceUsd}`, { type: ActivityType.Watching });
     } catch (error) {
         console.error('Error setting price:', error);
@@ -63,7 +65,7 @@ async function setNickname(fdv, symbol) {
     if (!guild || !guild.members.me) return console.error('guild or guild.members.me is not defined');
 
     try {
-        console.log('FDV:', fdv);
+        console.log('FDV:', formatFDV(fdv));
         await guild.members.me.setNickname(`$${symbol.toUpperCase()} ${formatFDV(fdv)}`);
     } catch (error) {
         console.error('Error setting FDV:', error);
@@ -74,12 +76,12 @@ async function updateBotStatus() {
     const pairs = await fetchData();
     if (!pairs.length) return;
     const { fdv, priceUsd, baseToken: { symbol } } = pairs[0];
-    await setActivity(priceUsd);
     await setNickname(fdv, symbol);
+    await setActivity(priceUsd);
 }
 
 client.login(DISCORD_BOT_TOKEN)
-    .then(() => console.log('Logged in!'))
+    .then(() => console.log('--------------------------\nLogged in!'))
     .catch(error => {
         if (error.code === 'TokenInvalid') {
             console.error('Invalid Discord token, double check your .env file.\n');
