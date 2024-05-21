@@ -74,7 +74,7 @@ async function updateBotStatus() {
 
 function startBot() {
     if (updateInterval) clearInterval(updateInterval);
-    updateInterval = setInterval(updateBotStatus, 20000);
+    updateInterval = setInterval(updateBotStatus, 60000);
     updateBotStatus().then(() => console.log('Bot started successfully!'));
 }
 
